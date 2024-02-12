@@ -12,7 +12,7 @@ import SceneKit
   │      rotate -90° about Y to bring +X to "front" then rotate -90° about X to bring +Z to "up"     │
   │                                                             .. and attach it to the "scene" node │
   └──────────────────────────────────────────────────────────────────────────────────────────────────┘*/
-func makeFrame() -> SCNNode {
+func makeFrameNode() -> SCNNode {
     if Debug.scene { print("       SceneConstruction| makeFrame()") }
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
@@ -33,9 +33,10 @@ func makeFrame() -> SCNNode {
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
     var earthNode: SCNNode
     if USE_SCENE_FILE {
-        earthNode = SCNScene(named: "com.ramsaycons.earth.scn")?.rootNode.childNodes.first ?? makeEarth()
+        earthNode = SCNScene(named: "com.ramsaycons.earth.scn")?
+                                                .rootNode.childNodes.first ?? makeEarthNode()
     } else {
-        earthNode = makeEarth()                                 // earthNode ("globe", "grids", coast")
+        earthNode = makeEarthNode()                             // earthNode ("globe", "grids", coast")
     }
 
     if let globeNode = earthNode.childNode(withName: "globe", recursively: true) {
@@ -54,17 +55,14 @@ func makeFrame() -> SCNNode {
     }
 
     earthNode.scale = SCNVector3(1.0, 1.0, 6356.752/6378.135)   // oblate squish
-#if os(iOS) || os(tvOS) || os(watchOS)
-    earthNode.eulerAngles.z = Float(zeroMeanSiderealTime(     	// turn for time
-                    julianDate: julianDaysNow()) * deg2rad)
-#else
-    earthNode.eulerAngles.z = CGFloat(zeroMeanSiderealTime(     // turn for time
-                    julianDate: julianDaysNow()) * deg2rad)
-#endif
+
+/*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
+  ┆                                                               .. rotate to earth to time of day. ┆
+  ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
+    rotateEarth(earthNode)
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆                                 Node("frame") --------+                                          ┆
-  ┆                                                       |                                          ┆
   ┆                                                       +-- Node("earth") --                       ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
     frameNode <<< earthNode                                     //           "frame" << "earth"
@@ -77,12 +75,22 @@ func makeFrame() -> SCNNode {
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆                                 Node("frame") --------+   Node("earth")                          ┆
-  ┆                                                       |                                          ┆
   ┆                                                       +-- Node("solar" <<< "light")              ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
     frameNode <<< solarNode                                     //           "frame" << "solar"
 
-    if Debug.scene { earthNode <<< addMarkerSpot(color: #colorLiteral(red: 0.95, green: 0.85, blue: 0.55, alpha: 1),
-                                                 at: VectorFloat(7500.0, 0.0, 0.0)) }
+    if Debug.scene { earthNode <<< addMarker(color: #colorLiteral(red: 0.95, green: 0.85, blue: 0.55, alpha: 1), at: VectorFloat(7500.0, 0.0, 0.0)) }
+
     return frameNode
+}
+
+/*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
+  ┆                                                               .. rotate to earth to time of day. ┆
+  ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
+public func rotateEarth(_ earthNode: SCNNode) {
+#if os(iOS) || os(tvOS) || os(watchOS)  || os(visionOS)
+    earthNode.eulerAngles.z = Float(zeroMeanSiderealTime(julianDate: julianDaysNow()) * deg2rad)
+#else
+    earthNode.eulerAngles.z = CGFloat(zeroMeanSiderealTime(julianDate: julianDaysNow()) * deg2rad)
+#endif
 }

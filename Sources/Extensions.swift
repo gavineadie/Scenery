@@ -45,7 +45,7 @@ public struct VertexFloat {
 
 extension SCNVector3 {
 
-#if os(iOS) || os(tvOS) || os(watchOS)
+#if os(iOS) || os(tvOS) || os(watchOS)  || os(visionOS)
     public init(_ x: Double, _ y: Double, _ z: Double) {
         self.init(x: Float(x), y: Float(y), z: Float(z))
     }

@@ -30,10 +30,10 @@ enum Debug {
   ┃     == Node("scene") ---+----|  Node("frame") --------+                                     |    ┃
   ┃                         |    |                        |                                     |    ┃
   ┃                         |    |                        +-- Node("earth") --+                 |    ┃
-  ┃                              |                        |                   +-- Node("globe") |    ┃
-  ┃                              |                        |                   +-- Node("grids") |    ┃
-  ┃                              |                        |                   +-- Node("coast") |    ┃
-  ┃                              +------------------------|-------------------------------------+    ┃
+  ┃                         |    |                        |                   +-- Node("globe") |    ┃
+  ┃                         |    |                        |                   +-- Node("grids") |    ┃
+  ┃                         |    |                        |                   +-- Node("coast") |    ┃
+  ┃                         |    +------------------------|-------------------------------------+    ┃
   ┃                                                                                                  ┃
   ┃             "construct(scene:)" adds nodes programmatically to represent other objects. It adds  ┃
   ┃             the light of the sun ("solar"), rotating once a year in the inertial coordinates of  ┃
@@ -85,7 +85,7 @@ public func wholeScene() -> SCNScene {
     sceneNode.name = "scene"                                    // .. and name it ..
 
     do {
-        let textureLoader = MTKTextureLoader(device: MTLCreateSystemDefaultDevice()!) // sceneView.device!)
+        let textureLoader = MTKTextureLoader(device: MTLCreateSystemDefaultDevice()!)
         scene.background.contents = try textureLoader.newTexture(name: "Star1024", scaleFactor: 1.0,
                                                                  bundle: .main, options: nil)
     } catch {
@@ -96,14 +96,13 @@ public func wholeScene() -> SCNScene {
   ┆                              +--------------------------------------------------------------+    ┆
   ┆                              |                                                              |    ┆
   ┆                              |  Node("frame") --------+                                     |    ┆
-  ┆                              |                        |                                     |    ┆
   ┆                              |                        +-- Node("earth") --+                 |    ┆
   ┆                              |                        |                   +-- Node("globe") |    ┆
   ┆                              |                        |                   +-- Node("grids") |    ┆
   ┆                              |                        |                   +-- Node("coast") |    ┆
   ┆                              +------------------------|-------------------------------------+    ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
-    let frameNode = makeFrame()
+    let frameNode = makeFrameNode()
     sceneNode <<< frameNode
 
     sceneNode <<< makeViewrNode()

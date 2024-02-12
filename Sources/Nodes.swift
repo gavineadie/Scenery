@@ -7,14 +7,14 @@ import SatelliteKit
 import SceneKit
 
 
-public let  annArborLatitude = +42.2755                         // degrees
-public let annArborLongitude = -83.7521                         // degrees
-public let  annArborAltitude =   0.1                            // Kilometers
+public let  annArborLatitude = +42.2755                     // degrees
+public let annArborLongitude = -83.7521                     // degrees
+public let  annArborAltitude =   0.1                        // Kilometers
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ a spot on the surface where the observer is standing ..                                          ┆
   ┆╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┆
-  ┆										                             +-- Node("obsvr")               ┆
+  ┆										                             +-- Node("obsvr")               ┆                          ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
 func makeObserver() -> SCNNode {
     if Debug.scene { print("       SceneConstruction| makeObserver()") }
@@ -31,11 +31,11 @@ func makeObserver() -> SCNNode {
 }
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
-  │ create a viewpoint node "viewr" away from the center of "earth" which, when rotated, will keep   │
-  │ that distance.  Attach the camera to it.                                                         │
-  │                                                      http://stackoverflow.com/questions/25654772 │
+  ┆ create a viewpoint node "viewr" away from the center of "earth" which, when rotated, will keep   ┆
+  ┆ that distance.  Attach the camera to it.                                                         ┆
+  ┆                                                      http://stackoverflow.com/questions/25654772 ┆
   ┆╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┆
-  ┃                         +-- Node("viewr" <<< "camra")                                            ┃
+  ┆                         +-- Node("viewr" <<< "camra")                                            ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
 let cameraDistance = 40_000.0
 let cameraBracket  = 10_000.0
@@ -45,9 +45,9 @@ func makeViewrNode() -> SCNNode {
 
     let viewrNode = SCNNode(name: "viewr")                  // non-rendering node, holds the camera
     if Debug.scene {
-        viewrNode <<< addMarkerSpot(color: #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1), at: VectorFloat(7000.0, 0.0, 0.0))
-        viewrNode <<< addMarkerSpot(color: #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1), at: VectorFloat(0.0, 7000.0, 0.0))
-        viewrNode <<< addMarkerSpot(color: #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1), at: VectorFloat(0.0, 0.0, 7000.0))
+        viewrNode <<< addMarker(color: #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1), at: VectorFloat(7000.0, 0.0, 0.0))
+        viewrNode <<< addMarker(color: #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1), at: VectorFloat(0.0, 7000.0, 0.0))
+        viewrNode <<< addMarker(color: #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1), at: VectorFloat(0.0, 0.0, 7000.0))
     }
 
     viewrNode <<< makeCameraNode()                          //              "viewr" << "camra"
@@ -80,7 +80,7 @@ func makeSolarLight() -> SCNNode {
   ┆╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┆
   ┆                                                       +-- Node("solar"                           ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
-    let solarNode = SCNNode(name: "solar")              // position of sun in (x,y,z)
+    let solarNode = SCNNode(name: "solar")                  // position of sun in (x,y,z)
 
     let sunVector = solarCel(julianDays: julianDaysNow())
     solarNode.position = SCNVector3(sunVector)
@@ -88,7 +88,7 @@ func makeSolarLight() -> SCNNode {
   ┆ make a bright light ..                                                                           ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
     let sunLight = SCNLight()
-    sunLight.type = .directional                        // make a directional light
+    sunLight.type = .directional                            // make a directional light
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆                                                                             "light"              ┆
@@ -99,15 +99,15 @@ func makeSolarLight() -> SCNNode {
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆                                                       +-- Node("solar" <<< "light")              ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
-    solarNode <<< lightNode                             //                      "solar" << "light"
+    solarNode <<< lightNode                                 //                      "solar" << "light"
     return solarNode
 }
 
 /*┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
   │ a spot on the x-axis (points at vernal equinox)                                                  │
   └──────────────────────────────────────────────────────────────────────────────────────────────────┘*/
-#if os(iOS) || os(tvOS) || os(watchOS)
-func addMarkerSpot(color: UIColor, at: VectorFloat) -> SCNNode {
+#if os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
+func addMarker(color: UIColor, at: VectorFloat) -> SCNNode {
     if Debug.scene { print("       SceneConstruction| addMarkerSpot()") }
 
     let spotsGeom = SCNSphere(radius: 100.0)
@@ -121,7 +121,7 @@ func addMarkerSpot(color: UIColor, at: VectorFloat) -> SCNNode {
     return spotsNode
 }
 #else
-func addMarkerSpot(color: NSColor, at: VectorFloat) -> SCNNode {
+func addMarker(color: NSColor, at: VectorFloat) -> SCNNode {
     if Debug.scene { print("       SceneConstruction| addMarkerSpot()") }
 
     let spotsGeom = SCNSphere(radius: 100.0)
