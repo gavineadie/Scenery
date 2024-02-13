@@ -11,9 +11,6 @@ import SceneKit
 func geometry(from vertexAssetName: String) -> SCNGeometry? {
     if Debug.scene { print("       SceneConstruction| geometry(from: \(vertexAssetName)") }
 
-//    let assetURL = Bundle.main.url(forResource: vertexAssetName, withExtension: "vector")!
-//    let vertexData = try! Data(contentsOf: assetURL)
-
     let vertexAsset = NSDataAsset(name: vertexAssetName)
 
     guard let vertexData = vertexAsset?.data else {
@@ -21,8 +18,8 @@ func geometry(from vertexAssetName: String) -> SCNGeometry? {
         return nil
     }
 
-    let vertexStride = MemoryLayout<VertexFloat>.stride
-    let vertexCount = vertexData.count/(vertexStride*2)
+    let vertexStride = MemoryLayout<Float>.stride * 3
+    let vertexCount = (vertexData.count) / (vertexStride*2)         // count of vertices (two per line)
 
     let vertexSource = SCNGeometrySource(data: vertexData,
                                          semantic: SCNGeometrySource.Semantic.vertex,
@@ -36,7 +33,7 @@ func geometry(from vertexAssetName: String) -> SCNGeometry? {
     let element = SCNGeometryElement(data: nil, 
                                      primitiveType: .line,
                                      primitiveCount: vertexCount,
-                                     bytesPerIndex: MemoryLayout<Int16>.size)
+                                     bytesPerIndex: MemoryLayout<Int>.size)
 
     return SCNGeometry(sources: [vertexSource], elements: [element])
 }
