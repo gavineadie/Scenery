@@ -9,7 +9,6 @@ import MetalKit
 import SceneKit
 import SatelliteKit
 
-let USE_SCENE_FILE = false
 let Rₑ: Double = 6378.135                // equatorial radius (polar radius = 6356.752 Kms)
 
 enum Debug {
@@ -113,5 +112,7 @@ public func wholeScene() -> SCNScene {
         camraNode.constraints = [cameraConstraint]
     }
 
+    OrbitNodes(frameNode: frameNode)
+    
     return scene
 }

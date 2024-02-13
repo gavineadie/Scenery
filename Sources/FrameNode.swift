@@ -6,6 +6,7 @@
 import SatelliteKit
 import SceneKit
 
+let USE_SCENE_FILE = false
 
 /*┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
   │ contruct the "frame" node .. this is the 'interial frame' of the universe ..                     │

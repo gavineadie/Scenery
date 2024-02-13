@@ -23,7 +23,7 @@ public struct VectorFloat {
     public init(_ v: VectorFloat) { x = v.x; y = v.y; z = v.z }
 }
 
-#if os(iOS) || os(tvOS) || os(watchOS)
+#if os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) 
 public struct VertexFloat {
     var x: Float
     var y: Float
