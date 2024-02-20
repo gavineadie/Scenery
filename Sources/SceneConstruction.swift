@@ -1,5 +1,5 @@
 /*╔══════════════════════════════════════════════════════════════════════════════════════════════════╗
-  ║ SceneConstruction.swift                                                                  Scenary ║
+  ║ SceneConstruction.swift                                                                  Scenery ║
   ║ Created by Gavin Eadie on Mar12/17   Copyright © 2017-24 Ramsay Consulting. All rights reserved. ║
   ╚══════════════════════════════════════════════════════════════════════════════════════════════════╝*/
 

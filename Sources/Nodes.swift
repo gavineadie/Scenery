@@ -1,5 +1,5 @@
 /*╔══════════════════════════════════════════════════════════════════════════════════════════════════╗
-  ║ Nodes.swift                                                                              Scenary ║
+  ║ Nodes.swift                                                                              Scenery ║
   ║ Created by Gavin Eadie on Feb12/24      Copyright © 2024 Ramsay Consulting. All rights reserved. ║
   ╚══════════════════════════════════════════════════════════════════════════════════════════════════╝*/
 
@@ -37,8 +37,7 @@ func makeObserver() -> SCNNode {
   ┆╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┆
   ┆                         +-- Node("viewr" <<< "camra")                                            ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
-let cameraDistance = 40_000.0
-let cameraBracket  = 10_000.0
+let cameraDistance = 50_000.0
 
 func makeViewrNode() -> SCNNode {
     if Debug.scene { print("       SceneConstruction| makeCameraView()") }
@@ -59,9 +58,9 @@ func makeCameraNode() -> SCNNode {
     if Debug.scene { print("       SceneConstruction| makeCameraNode()") }
 
     let camera = SCNCamera()                                // create a camera
-    camera.zFar  = cameraDistance + cameraBracket
-    camera.zNear = cameraDistance - cameraBracket
-    camera.fieldOfView = 30.0
+    camera.zFar  = cameraDistance + 100_000.0
+    camera.zNear = cameraDistance - 50_000.0
+    camera.fieldOfView = 20.0
 
     let camraNode = SCNNode(name: "camra")
     camraNode.camera = camera

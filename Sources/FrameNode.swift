@@ -1,5 +1,5 @@
 /*╔══════════════════════════════════════════════════════════════════════════════════════════════════╗
-  ║ FrameNode.swift                                                                          Scenary ║
+  ║ FrameNode.swift                                                                          Scenery ║
   ║ Created by Gavin Eadie on Feb12/24      Copyright © 2024 Ramsay Consulting. All rights reserved. ║
   ╚══════════════════════════════════════════════════════════════════════════════════════════════════╝*/
 

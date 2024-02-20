@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
     name: "Scenery",
     platforms: [
-        .macOS(.v11), .iOS(.v15), .tvOS(.v15), .watchOS(.v7), .visionOS(.v1)
+        .macOS(.v12), .iOS(.v15), .tvOS(.v15), .watchOS(.v7), .visionOS(.v1)
     ],
     products: [
         .library(
