@@ -6,12 +6,15 @@
 // swiftlint:disable statement_position
 
 import SceneKit
-import DemosKit
 import SatelliteKit
+
+import DemosKit
 
 let celestrakBase = "https://celestrak.org/NORAD/elements/gp.php?"
 var elementsStore = ElementsStore(baseName: "com.ramsaycons.SatelliteStore")
-//var visualGroup = ElementsGroup()
+//let visualTLEs = try! String(contentsOfFile:
+//                "/Users/gavin/Library/Application Support/com.ramsaycons.tle/visual.txt")
+let visualGroup = ElementsGroup(groupKey: "visual")
 
 extension ElementsGroup {
 
@@ -40,35 +43,38 @@ extension ElementsGroup {
 
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
-  ┆ guard for satellites available ..                                                                ┆
-  ┆                                         .. specifically, we have a non-zero "visible" collection ┆
-  ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
-let visualTLEs = try! String(contentsOfFile:
-                "/Users/gavin/Library/Application Support/com.ramsaycons.tle/visual.txt")
-let visualGroup = ElementsGroup(groupKey: "visual")
-
-/*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ for the satellite(s) we want to display ..                                                       ┆
   ┆         .. create the STATIC dots for the orbit "O-" and groundtrack "S-" for the satellite ..   ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
 
-public func OrbitNodes(frameNode: SCNNode) {
+public func OrbitNodes() -> SCNNode {
+    let orbitNode = SCNNode(name: "orbit")
+
     if let elements = visualGroup.table[25544] {  // 42684
         let satellite = Satellite(elements: elements)
 
-        if frameNode.childNode(withName: "H-" + satellite.noradIdent, recursively: true) == nil {
-            satellite.horizonNode(inFrame: frameNode)
+        if orbitNode.childNode(withName: "H-" + satellite.noradIdent, recursively: true) == nil {
+            satellite.horizonNode(inFrame: orbitNode)
         }
 
-        if frameNode.childNode(withName: "O-" + satellite.noradIdent, recursively: true) == nil {
-            satellite.orbitalNode(inFrame: frameNode)
+        if orbitNode.childNode(withName: "O-" + satellite.noradIdent, recursively: true) == nil {
+            satellite.orbitalNode(inFrame: orbitNode)
         }
 
-//      if frameNode.childNode(withName: "S-" + satellite.noradIdent, recursively: true) == nil {
-//          satellite.surfaceNode(inFrame: frameNode)
-//      }
+//        if orbitNode.childNode(withName: "S-" + satellite.noradIdent, recursively: true) == nil {
+//          satellite.surfaceNode(inFrame: orbitNode)
+//        }
 
-        satellite.everySecond(inFrame: frameNode)
+        satellite.everySecond(inFrame: orbitNode)
+    }
+
+    return orbitNode
+}
+
+public func moveOrbits(_ orbitNode: SCNNode) {
+    if let elements = visualGroup.table[25544] {
+        let satellite = Satellite(elements: elements)
+        satellite.everySecond(inFrame: orbitNode)
     }
 }
 
@@ -86,32 +92,10 @@ let dotMinRadius = 15.0
 public extension Satellite {
 
 /*┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │ satellite may own a SCNNode containing a trail of dots across the earth's surface ..             │
-  └──────────────────────────────────────────────────────────────────────────────────────────────────┘*/
-    var trailNode: SCNNode {
-        let node = SCNNode()
-        node.name = self.noradIdent
-
-        for _ in 0...orbTickRange.count {
-            let dottyGeom = SCNSphere(radius: dotMaxRadius)         //
-            dottyGeom.isGeodesic = true
-            dottyGeom.segmentCount = 6
-            dottyGeom.firstMaterial?.emission.contents = #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1) // NSColor.white (!!CPU!!)
-
-            let dottyNode = SCNNode(geometry: dottyGeom)
-            dottyNode.position = SCNVector3(0.0, 0.0, 0.0)
-
-            node <<< dottyNode                              //                      "trail" << "dotty"
-        }
-
-        return node
-    }
-
-/*┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
   │ create (don't position) a SCNNode with a trail of dots along the satellite's orbit ..            │
   └──────────────────────────────────────────────────────────────────────────────────────────────────┘*/
-    func horizonNode(inFrame frameNode: SCNNode) {
-            let node = SCNNode(name: "H-" + self.noradIdent)
+    func horizonNode(inFrame orbitNode: SCNNode) {
+            let hTicksNode = SCNNode(name: "H-" + self.noradIdent)
 
             for _ in 0...horizonVertexCount {
                 let dottyGeom = SCNSphere(radius: dotMaxRadius)         //
@@ -119,17 +103,17 @@ public extension Satellite {
                 dottyGeom.segmentCount = 4
                 dottyGeom.firstMaterial?.emission.contents = #colorLiteral(red: 0.9994240403, green: 0.9855536819, blue: 0, alpha: 1) // NSColor.white (!!CPU!!)
                 dottyGeom.firstMaterial?.diffuse.contents = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
-                node <<< SCNNode(geometry: dottyGeom)
+                hTicksNode <<< SCNNode(geometry: dottyGeom)
             }
 
-            frameNode <<< node
+            orbitNode <<< hTicksNode
     }
 
 /*┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
   │ create (don't position) a SCNNode with a trail of dots along the satellite's orbit ..            │
   └──────────────────────────────────────────────────────────────────────────────────────────────────┘*/
-    func orbitalNode(inFrame frameNode: SCNNode) {
-            let node = SCNNode(name: "O-" + self.noradIdent)
+    func orbitalNode(inFrame orbitNode: SCNNode) {
+            let oTicksNode = SCNNode(name: "O-" + self.noradIdent)
 
             for _ in orbTickRange {
                 let dottyGeom = SCNSphere(radius: dotMaxRadius)         //
@@ -137,17 +121,17 @@ public extension Satellite {
                 dottyGeom.segmentCount = 4
                 dottyGeom.firstMaterial?.emission.contents = #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1) // NSColor.white (!!CPU!!)
                 dottyGeom.firstMaterial?.diffuse.contents = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
-                node <<< SCNNode(geometry: dottyGeom)
+                oTicksNode <<< SCNNode(geometry: dottyGeom)
             }
 
-            frameNode <<< node
+            orbitNode <<< oTicksNode
     }
 
 /*┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
   │ create (don't position) a SCNNode with a trail of dots along the satellite's groundtrack ..      │
   └──────────────────────────────────────────────────────────────────────────────────────────────────┘*/
-    func surfaceNode(inFrame frameNode: SCNNode) {
-            let node = SCNNode(name: "S-" + self.noradIdent)
+    func surfaceNode(inFrame orbitNode: SCNNode) {
+            let sTicksNode = SCNNode(name: "S-" + self.noradIdent)
 
             for _ in surTickRange {
                 let dottyGeom = SCNSphere(radius: dotMaxRadius)
@@ -155,10 +139,10 @@ public extension Satellite {
                 dottyGeom.segmentCount = 4
                 dottyGeom.firstMaterial?.emission.contents = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)    // (!!CPU!!)
                 dottyGeom.firstMaterial?.diffuse.contents = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
-                node <<< SCNNode(geometry: dottyGeom)
+                sTicksNode <<< SCNNode(geometry: dottyGeom)
             }
 
-            frameNode <<< node
+            orbitNode <<< sTicksNode
 
     }
 
@@ -166,9 +150,9 @@ public extension Satellite {
 
         let nowMinsAfterEpoch = (ep1950DaysNow() - self.t₀Days1950) * 1440.0
 
-        if let orbitalNode = frameNode.childNode(withName: "O-" + self.noradIdent,
-                                                 recursively: true) {
-            let oDots = orbitalNode.childNodes
+        if let oNode = frameNode.childNode(withName: "O-" + self.noradIdent,
+                                           recursively: true) {
+            let oDots = oNode.childNodes
 
             for index in orbTickRange {
 
@@ -203,9 +187,9 @@ public extension Satellite {
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ for 'surface' track ..                                                                           ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
-        if let surfaceNode = frameNode.childNode(withName: "S-" + self.noradIdent,
-                                                 recursively: true) {
-            let sDots = surfaceNode.childNodes
+        if let sNode = frameNode.childNode(withName: "S-" + self.noradIdent,
+                                           recursively: true) {
+            let sDots = sNode.childNodes
 
             for index in surTickRange {
 
@@ -237,9 +221,9 @@ public extension Satellite {
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ for 'horizon' track ..                                                                           ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
-        if let horizonNode = frameNode.childNode(withName: "H-" + self.noradIdent,
-                                                 recursively: true) {
-            let hDots = horizonNode.childNodes
+        if let hNode = frameNode.childNode(withName: "H-" + self.noradIdent,
+                                           recursively: true) {
+            let hDots = hNode.childNodes
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ get the sub-satellite point ..                                                                   ┆

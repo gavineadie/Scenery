@@ -13,12 +13,12 @@ let package = Package(
             targets: ["Scenery"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/gavineadie/SatelliteKit.git", from: "1.0.0")
+        .package(url: "https://github.com/gavineadie/DemosKit.git", from: "0.3.0")
     ],
     targets: [
         .target(
             name: "Scenery",
-            dependencies: [ .product(name: "SatelliteKit", package: "SatelliteKit") ]),
+            dependencies: [ .product(name: "DemosKit", package: "DemosKit") ]),
 		.testTarget(
 			name: "SceneryTests",
 			dependencies: ["Scenery"]),

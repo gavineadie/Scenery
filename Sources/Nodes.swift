@@ -43,6 +43,7 @@ func makeViewrNode() -> SCNNode {
     if Debug.scene { print("       SceneConstruction| makeCameraView()") }
 
     let viewrNode = SCNNode(name: "viewr")                  // non-rendering node, holds the camera
+
     if Debug.scene {
         viewrNode <<< addMarker(color: #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1), at: VectorFloat(7000.0, 0.0, 0.0))
         viewrNode <<< addMarker(color: #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1), at: VectorFloat(0.0, 7000.0, 0.0))

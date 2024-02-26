@@ -34,8 +34,9 @@ func makeFrameNode() -> SCNNode {
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
     var earthNode: SCNNode
     if USE_SCENE_FILE {
-        earthNode = SCNScene(named: "com.ramsaycons.earth.scn")?
-                                                .rootNode.childNodes.first ?? makeEarthNode()
+        earthNode = (SCNScene(named: "com.ramsaycons.earth.scn")?
+            .rootNode.childNodes.first)!
+        earthNode <<< makeGlobe()                                       // earth << globe
     } else {
         earthNode = makeEarthNode()                             // earthNode ("globe", "grids", coast")
     }
