@@ -3,156 +3,46 @@
   ║ Created by Gavin Eadie on Jan01/17.. Copyright © 2017-24 Ramsay Consulting. All rights reserved. ║
   ╚══════════════════════════════════════════════════════════════════════════════════════════════════╝*/
 
-// swiftlint:disable statement_position
-
 import SceneKit
+import DemosKit
 import SatelliteKit
 
-import DemosKit
-
-let celestrakBase = "https://celestrak.org/NORAD/elements/gp.php?"
-var elementsStore = ElementsStore(baseName: "com.ramsaycons.SatelliteStore")
-//let visualTLEs = try! String(contentsOfFile:
-//                "/Users/gavin/Library/Application Support/com.ramsaycons.tle/visual.txt")
-let visualGroup = ElementsGroup(groupKey: "visual")
-
-extension ElementsGroup {
-
-    public init(groupKey: String = "visual") {
-
-        if let groupAge = elementsStore.ageElements(groupKey: groupKey),
-               groupAge < 7.5 {
-
-        } else {
-
-            guard let tleURL =
-                    URL(string: "\(celestrakBase)GROUP=\(groupKey)&FORMAT=tle")
-                                            else { fatalError("× Celestrak URL malformed!") }
-
-            Task {
-                let visualContents = await ElementsGroup().fetchFrom(url: tleURL)
-                elementsStore.insertElements(groupKey: groupKey, cacheText: visualContents)
-            }
-        }
-
-        sleep(5)
-
-        self.init(elementsStore.extractElements(groupKey: groupKey)!)
-    }
-}
-
-
-/*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
-  ┆ for the satellite(s) we want to display ..                                                       ┆
-  ┆         .. create the STATIC dots for the orbit "O-" and groundtrack "S-" for the satellite ..   ┆
-  ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
-
-public func OrbitNodes() -> SCNNode {
-    let orbitNode = SCNNode(name: "orbit")
-
-    if let elements = visualGroup.table[25544] {  // 42684
-        let satellite = Satellite(elements: elements)
-
-        if orbitNode.childNode(withName: "H-" + satellite.noradIdent, recursively: true) == nil {
-            satellite.horizonNode(inFrame: orbitNode)
-        }
-
-        if orbitNode.childNode(withName: "O-" + satellite.noradIdent, recursively: true) == nil {
-            satellite.orbitalNode(inFrame: orbitNode)
-        }
-
-//        if orbitNode.childNode(withName: "S-" + satellite.noradIdent, recursively: true) == nil {
-//          satellite.surfaceNode(inFrame: orbitNode)
-//        }
-
-        satellite.everySecond(inFrame: orbitNode)
-    }
-
-    return orbitNode
-}
+var elementsGroup: ElementsGroup?
 
 public func moveOrbits(_ orbitNode: SCNNode) {
-    if let elements = visualGroup.table[25544] {
+/*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
+  ┆ if orbitNode.childNodes.count = 0, we don't have elements yet .. so keep trying ..               ┆
+  ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
+    if orbitNode.childNodes.count == 0 {
+        makeOrbitNodes(orbitNode: orbitNode)
+    }
+    
+    if Debug.scene { print("       TimelineView (1s)| moveOrbits() -- orbitNode.childNode.count = [\(orbitNode.childNodes.count)]") }
+
+    if elementsGroup == nil {
+        if Debug.scene { print("       TimelineView (1s)| moveOrbits() --> elementsGroup == nil") }
+        elementsGroup = loadGroup("visual")
+        return
+    }
+
+    if let elements = elementsGroup?.table[25544] {
         let satellite = Satellite(elements: elements)
-        satellite.everySecond(inFrame: orbitNode)
+        if Debug.scene { print("       TimelineView (1s)| moveOrbits() --> sat# \(satellite.noradIdent)") }
+        satellite.everySecond(orbitNode: orbitNode)
     }
 }
-
-
-let orbTickDelta = 30                                           // seconds between marks on orbit
-let orbTickRange = -5*(60/orbTickDelta)...80*(60/orbTickDelta)  // range of marks on orbital track ..
-let surTickRange = -5*(60/orbTickDelta)...300*(60/orbTickDelta) // range of marks on surface track ..
-
-let horizonVertexCount = 90
-
-let dotSatRadius = 75.0
-let dotMaxRadius = 30.0
-let dotMinRadius = 15.0
 
 public extension Satellite {
 
-/*┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │ create (don't position) a SCNNode with a trail of dots along the satellite's orbit ..            │
-  └──────────────────────────────────────────────────────────────────────────────────────────────────┘*/
-    func horizonNode(inFrame orbitNode: SCNNode) {
-            let hTicksNode = SCNNode(name: "H-" + self.noradIdent)
-
-            for _ in 0...horizonVertexCount {
-                let dottyGeom = SCNSphere(radius: dotMaxRadius)         //
-                dottyGeom.isGeodesic = true
-                dottyGeom.segmentCount = 4
-                dottyGeom.firstMaterial?.emission.contents = #colorLiteral(red: 0.9994240403, green: 0.9855536819, blue: 0, alpha: 1) // NSColor.white (!!CPU!!)
-                dottyGeom.firstMaterial?.diffuse.contents = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
-                hTicksNode <<< SCNNode(geometry: dottyGeom)
-            }
-
-            orbitNode <<< hTicksNode
-    }
-
-/*┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │ create (don't position) a SCNNode with a trail of dots along the satellite's orbit ..            │
-  └──────────────────────────────────────────────────────────────────────────────────────────────────┘*/
-    func orbitalNode(inFrame orbitNode: SCNNode) {
-            let oTicksNode = SCNNode(name: "O-" + self.noradIdent)
-
-            for _ in orbTickRange {
-                let dottyGeom = SCNSphere(radius: dotMaxRadius)         //
-                dottyGeom.isGeodesic = true
-                dottyGeom.segmentCount = 4
-                dottyGeom.firstMaterial?.emission.contents = #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1) // NSColor.white (!!CPU!!)
-                dottyGeom.firstMaterial?.diffuse.contents = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
-                oTicksNode <<< SCNNode(geometry: dottyGeom)
-            }
-
-            orbitNode <<< oTicksNode
-    }
-
-/*┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │ create (don't position) a SCNNode with a trail of dots along the satellite's groundtrack ..      │
-  └──────────────────────────────────────────────────────────────────────────────────────────────────┘*/
-    func surfaceNode(inFrame orbitNode: SCNNode) {
-            let sTicksNode = SCNNode(name: "S-" + self.noradIdent)
-
-            for _ in surTickRange {
-                let dottyGeom = SCNSphere(radius: dotMaxRadius)
-                dottyGeom.isGeodesic = true
-                dottyGeom.segmentCount = 4
-                dottyGeom.firstMaterial?.emission.contents = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)    // (!!CPU!!)
-                dottyGeom.firstMaterial?.diffuse.contents = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
-                sTicksNode <<< SCNNode(geometry: dottyGeom)
-            }
-
-            orbitNode <<< sTicksNode
-
-    }
-
-    func everySecond(inFrame frameNode: SCNNode) {
+    func everySecond(orbitNode: SCNNode) {
+        if Debug.scene { print("     extension Satellite| everySecond()") }
 
         let nowMinsAfterEpoch = (ep1950DaysNow() - self.t₀Days1950) * 1440.0
 
-        if let oNode = frameNode.childNode(withName: "O-" + self.noradIdent,
+        if let oNode = orbitNode.childNode(withName: "O-" + noradIdent,
                                            recursively: true) {
             let oDots = oNode.childNodes
+            if Debug.scene { print("     extension Satellite| 'O-\(noradIdent)' [\(oDots.count)]") }
 
             for index in orbTickRange {
 
@@ -182,14 +72,15 @@ public extension Satellite {
                     }
                 }
             }
-        } else { fatalError("orbital") }
+        }
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ for 'surface' track ..                                                                           ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
-        if let sNode = frameNode.childNode(withName: "S-" + self.noradIdent,
+        if let sNode = orbitNode.childNode(withName: "S-" + self.noradIdent,
                                            recursively: true) {
             let sDots = sNode.childNodes
+            if Debug.scene { print("     extension Satellite| 'S-\(noradIdent)' [\(sDots.count)]") }
 
             for index in surTickRange {
 
@@ -216,14 +107,15 @@ public extension Satellite {
                     }
                 }
             }
-        } else {  }
+        }
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ for 'horizon' track ..                                                                           ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
-        if let hNode = frameNode.childNode(withName: "H-" + self.noradIdent,
+        if let hNode = orbitNode.childNode(withName: "H-" + self.noradIdent,
                                            recursively: true) {
             let hDots = hNode.childNodes
+            if Debug.scene { print("     extension Satellite| 'H-\(noradIdent)' [\(hDots.count)]") }
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ get the sub-satellite point ..                                                                   ┆
@@ -279,6 +171,6 @@ public extension Satellite {
 #endif
 
             }
-        } else { fatalError("horizon") }
+        }
     }
 }

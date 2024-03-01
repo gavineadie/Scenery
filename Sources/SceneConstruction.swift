@@ -53,24 +53,30 @@ enum Debug {
   ┃         Satellites also moving in the inertial frame but they are not added here ..              ┃
   ┃                                                                                                  ┃
   ┃╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┃
-  ┃          SceneConstruction| >> orbitScene()                                                      ┃
-  ┃          SceneConstruction| makeFrame()                                                          ┃
-  ┃          SceneConstruction| makeEarth()                                                          ┃
-  ┃          SceneConstruction| makeGlobe()                                                          ┃
-  ┃          SceneConstruction| geometry(from: grids                                                 ┃
-  ┃          SceneConstruction| geometry(from: coast                                                 ┃
-  ┃          SceneConstruction| makeObserver()                                                       ┃
-  ┃          SceneConstruction| makeSolarLight()                                                     ┃
-  ┃          SceneConstruction| addMarkerSpot()                                                      ┃
-  ┃          SceneConstruction| makeCameraView()                                                     ┃
-  ┃          SceneConstruction| addMarkerSpot()                                                      ┃
-  ┃          SceneConstruction| addMarkerSpot()                                                      ┃
-  ┃          SceneConstruction| addMarkerSpot()                                                      ┃
-  ┃          SceneConstruction| makeCameraNode()                                                     ┃
+  ┃         → → OrbitView                                                                            ┃
+  ┃                 SceneConstruction| wholeScene()                                                  ┃
+  ┃         ------------------------------------------------------------ called once                 ┃
+  ┃                     SceneConstruction| makeFrame()                                               ┃
+  ┃                         SceneConstruction| makeEarth()                                           ┃
+  ┃                             SceneConstruction| makeGlobe()                                       ┃
+  ┃                             SceneConstruction| geometry(from: grids)                             ┃
+  ┃                             SceneConstruction| geometry(from: coast)                             ┃
+  ┃                             SceneConstruction| makeObserver()                                    ┃
+  ┃                         SceneConstruction| makeSolarLight()                                      ┃
+  ┃                         SceneConstruction| addMarkerSpot()                                       ┃
+  ┃                                                                                                  ┃
+  ┃                     SceneConstruction| makeViewrNode()                                           ┃
+  ┃                         SceneConstruction| addMarkerSpot()                                       ┃
+  ┃                         SceneConstruction| addMarkerSpot()                                       ┃
+  ┃                         SceneConstruction| addMarkerSpot()                                       ┃
+  ┃                         SceneConstruction| makeCameraNode()                                      ┃
+  ┃                                                                                                  ┃
+  ┃                     OrbitConstruction| makeOrbitNodes()                                              ┃
+  ┃         ------------------------------------------------------------                             ┃
   ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛*/
 
 public func wholeScene() -> SCNScene {
-    if Debug.scene { print("       SceneConstruction| >> wholeScene()") }
+    if Debug.scene { print("       SceneConstruction| wholeScene()") }
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ SCNView.scene.rootNode                                                                           ┆
@@ -117,10 +123,9 @@ public func wholeScene() -> SCNScene {
   ┆                              |                                                              |    ┆
   ┆                              |  Node("frame") --------+                                     |    ┆
   ┆                              |                        +-- Node("orbit") --+                 |    ┆
-  ┆                              |                        |                   +-- Node("12345") |    ┆
   ┆                              +------------------------|-------------------------------------+    ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
-    frameNode <<< OrbitNodes()
+    frameNode <<< SCNNode(name: "orbit")        // where we will attach satellite nodes
 
     return scene
 }

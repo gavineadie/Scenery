@@ -40,7 +40,7 @@ func makeObserver() -> SCNNode {
 let cameraDistance = 50_000.0
 
 func makeViewrNode() -> SCNNode {
-    if Debug.scene { print("       SceneConstruction| makeCameraView()") }
+    if Debug.scene { print("       SceneConstruction| makeViewrNode()") }
 
     let viewrNode = SCNNode(name: "viewr")                  // non-rendering node, holds the camera
 
@@ -108,7 +108,7 @@ func makeSolarLight() -> SCNNode {
   └──────────────────────────────────────────────────────────────────────────────────────────────────┘*/
 #if os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
 func addMarker(color: UIColor, at: VectorFloat) -> SCNNode {
-    if Debug.scene { print("       SceneConstruction| addMarkerSpot()") }
+    if Debug.scene { print("       SceneConstruction| addMarker()") }
 
     let spotsGeom = SCNSphere(radius: 100.0)
     spotsGeom.isGeodesic = true
@@ -122,7 +122,7 @@ func addMarker(color: UIColor, at: VectorFloat) -> SCNNode {
 }
 #else
 func addMarker(color: NSColor, at: VectorFloat) -> SCNNode {
-    if Debug.scene { print("       SceneConstruction| addMarkerSpot()") }
+    if Debug.scene { print("       SceneConstruction| addMarker()") }
 
     let spotsGeom = SCNSphere(radius: 100.0)
     spotsGeom.isGeodesic = true
