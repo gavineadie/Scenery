@@ -30,7 +30,7 @@ let dotMinRadius = 15.0
   ┃                     OrbitConstruction| OrbitNodes()                                              ┃
   ┃                     OrbitConstruction| no elements -- nil                                        ┃
   ┃                     TimelineView (1s)| moveOrbits() -- orbitNode.childNode.count = [0]           ┃
-  ┃                     TimelineView (1s)| moveOrbits() --> elementsGroup == nil                     ┃
+  ┃                     TimelineView (1s)| moveOrbits() -- elementsGroup == nil                      ┃
   ┃         elements not in cache, so get them                                                       ┃
   ┃              • Store.init| /Users/gavin/Library/Caches/com.ramsaycons.Sat                        ┃
   ┃              ×  Store.get| "visual" absent                                                       ┃
@@ -39,20 +39,20 @@ let dotMinRadius = 15.0
   ┃                     OrbitConstruction| OrbitNodes()                                              ┃
   ┃                     OrbitConstruction| no elements -- nil                                        ┃
   ┃                     TimelineView (1s)| moveOrbits() -- orbitNode.childNode.count = [0]           ┃
-  ┃                     TimelineView (1s)| moveOrbits() --> elementsGroup == nil                     ┃
+  ┃                     TimelineView (1s)| moveOrbits() -- elementsGroup == nil                      ┃
   ┃         elements now available                                                                   ┃
   ┃              •  Store.get| "visual"                                                              ┃
   ┃         ------------------------------------------------------------                             ┃
   ┃                     OrbitConstruction| OrbitNodes()                                              ┃
   ┃                     OrbitConstruction| orbit <<< H-25544 + O-25544 +                             ┃
   ┃                     TimelineView (1s)| moveOrbits() -- orbitNode.childNode.count = [2]           ┃
-  ┃                     TimelineView (1s)| moveOrbits() --> sat# 25544                               ┃
+  ┃                     TimelineView (1s)| moveOrbits() -- sat# 25544                                ┃
   ┃                   extension Satellite| everySecond()                                             ┃
   ┃                   extension Satellite| 'O-25544' [171]                                           ┃
   ┃                   extension Satellite| 'H-25544' [91]                                            ┃
   ┃         ------------------------------------------------------------                             ┃
   ┃                     TimelineView (1s)| moveOrbits() -- orbitNode.childNode.count = [2]           ┃
-  ┃                     TimelineView (1s)| moveOrbits() --> sat# 25544                               ┃
+  ┃                     TimelineView (1s)| moveOrbits() -- sat# 25544                                ┃
   ┃                   extension Satellite| everySecond()                                             ┃
   ┃                   extension Satellite| 'O-25544' [171]                                           ┃
   ┃                   extension Satellite| 'H-25544' [91]                                            ┃
@@ -67,21 +67,17 @@ let dotMinRadius = 15.0
 public func makeOrbitNodes(orbitNode: SCNNode) -> SCNNode {
     if Debug.scene { print("       OrbitConstruction| makeOrbitNodes()") }
 
-/*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
-  ┆                              +--------------------------------------------------------------+    ┆
-  ┆                              |                        +-- Node("orbit") --+                 |    ┆
-  ┆                              |                        |                   +-- Node("H-nnn") |    ┆
-  ┆                              |                        |                   +-- Node("O-nnn") |    ┆
-  ┆                              |                        |                   +-- Node("S-nnn") |    ┆
-  ┆                              +------------------------|-------------------------------------+    ┆
-  ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
-//    let orbitNode = // SCNNode(name: "orbit")
-
     if let elements = elementsGroup?.table[25544] {  // 42684
         let satellite = Satellite(elements: elements)
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ create (don't position) a SCNNode with a trail of dots along the satellite's orbit ..            ┆
+  ┆                                                                                                  ┆
+  ┆╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┆
+  ┆                              +--------------------------------------------------------------+    ┆
+  ┆                              |                        +-- Node("orbit") --+                 |    ┆
+  ┆                              |                        |                   +-- Node("H-nnn") |    ┆
+  ┆                              +------------------------|-------------------------------------+    ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
         let hTicksNode = SCNNode(name: "H-" + satellite.noradIdent)
 
@@ -98,6 +94,12 @@ public func makeOrbitNodes(orbitNode: SCNNode) -> SCNNode {
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ create (don't position) a SCNNode with a trail of dots along the satellite's orbit ..            ┆
+  ┆                                                                                                  ┆
+  ┆╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┆
+  ┆                              +--------------------------------------------------------------+    ┆
+  ┆                              |                        +-- Node("orbit") --+                 |    ┆
+  ┆                              |                        |                   +-- Node("O-nnn") |    ┆
+  ┆                              +------------------------|-------------------------------------+    ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
         let oTicksNode = SCNNode(name: "O-" + satellite.noradIdent)
 
@@ -118,7 +120,7 @@ public func makeOrbitNodes(orbitNode: SCNNode) -> SCNNode {
                 for node in orbitNode.childNodes {
                     nodeNames += "\(node.name!) + "
                 }
-                if Debug.scene { print("       OrbitConstruction| \(orbitNode.name!) <<< \(nodeNames.dropLast())") }
+                if Debug.scene { print("       OrbitConstruction| \(orbitNode.name!) <<< \(nodeNames.dropLast(3))") }
             } else {
                 if Debug.scene { print("       OrbitConstruction| \(orbitNode.name!) childCount = 0") }
             }
@@ -126,6 +128,12 @@ public func makeOrbitNodes(orbitNode: SCNNode) -> SCNNode {
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ create (don't position) a SCNNode with a trail of dots along the satellite's groundtrack ..      ┆
+  ┆                                                                                                  ┆
+  ┆╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┆
+  ┆                              +--------------------------------------------------------------+    ┆
+  ┆                              |                        +-- Node("orbit") --+                 |    ┆
+  ┆                              |                        |                   +-- Node("S-nnn") |    ┆
+  ┆                              +------------------------|-------------------------------------+    ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
         let sTicksNode = SCNNode(name: "S-" + satellite.noradIdent)
 
@@ -137,12 +145,6 @@ public func makeOrbitNodes(orbitNode: SCNNode) -> SCNNode {
             dottyGeom.firstMaterial?.diffuse.contents = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
             sTicksNode <<< SCNNode(geometry: dottyGeom)
         }
-
-//      orbitNode <<< sTicksNode            // FIXME: find a better way to condition display
-
-//      satellite.everySecond(orbitNode: orbitNode)
-    } else {
-        if Debug.scene { print("       OrbitConstruction| no elements -- \(elementsGroup?.prettyPrint())") }
     }
 
     return orbitNode
@@ -185,13 +187,13 @@ func loadGroup(_ groupKey: String) -> ElementsGroup? {
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
         Task {
             let jsonString = await fetchFrom(url: visualJsonURL)
-            elementsStore.insertElements(groupKey: groupKey, cacheText: jsonString)
+            elementsStore.insertElements(groupKey: groupKey, 
+            							 cacheText: jsonString)
 
             let elementsArray = try! decoder.decode([Elements].self,
                                                     from: jsonString.data(using: .utf8)!)
             return ElementsGroup(elementsArray)
         }
-        
     }
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
@@ -225,6 +227,7 @@ func fetchFrom(url: URL) async -> String {
         guard let string = String(data: data,
                                   encoding: .utf8) else { fatalError("fetchFrom: data error ..") }
         return string
-    } catch { fatalError("fetchFrom \(error.localizedDescription) ..") }
+    } catch {
+        fatalError("fetchFrom \(error.localizedDescription) ..")
+    }
 }
-

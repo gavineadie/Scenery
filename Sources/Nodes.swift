@@ -14,7 +14,7 @@ public let  annArborAltitude =   0.1                        // Kilometers
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ a spot on the surface where the observer is standing ..                                          ┆
   ┆╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┆
-  ┆										                             +-- Node("obsvr")               ┆                          ┆
+  ┆                                       +-- Node("obsvr")               ┆                          ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
 func makeObserver() -> SCNNode {
     if Debug.scene { print("       SceneConstruction| makeObserver()") }
@@ -45,9 +45,9 @@ func makeViewrNode() -> SCNNode {
     let viewrNode = SCNNode(name: "viewr")                  // non-rendering node, holds the camera
 
     if Debug.scene {
-        viewrNode <<< addMarker(color: #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1), at: VectorFloat(7000.0, 0.0, 0.0))
-        viewrNode <<< addMarker(color: #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1), at: VectorFloat(0.0, 7000.0, 0.0))
-        viewrNode <<< addMarker(color: #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1), at: VectorFloat(0.0, 0.0, 7000.0))
+        viewrNode <<< addMarkerNode(color: #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1), at: VectorFloat(7000.0, 0.0, 0.0))
+        viewrNode <<< addMarkerNode(color: #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1), at: VectorFloat(0.0, 7000.0, 0.0))
+        viewrNode <<< addMarkerNode(color: #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1), at: VectorFloat(0.0, 0.0, 7000.0))
     }
 
     viewrNode <<< makeCameraNode()                          //              "viewr" << "camra"
@@ -107,7 +107,7 @@ func makeSolarLight() -> SCNNode {
   │ a spot on the x-axis (points at vernal equinox)                                                  │
   └──────────────────────────────────────────────────────────────────────────────────────────────────┘*/
 #if os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
-func addMarker(color: UIColor, at: VectorFloat) -> SCNNode {
+func addMarkerNode(color: UIColor, at: VectorFloat) -> SCNNode {
     if Debug.scene { print("       SceneConstruction| addMarker()") }
 
     let spotsGeom = SCNSphere(radius: 100.0)
@@ -121,7 +121,7 @@ func addMarker(color: UIColor, at: VectorFloat) -> SCNNode {
     return spotsNode
 }
 #else
-func addMarker(color: NSColor, at: VectorFloat) -> SCNNode {
+func addMarkerNode(color: NSColor, at: VectorFloat) -> SCNNode {
     if Debug.scene { print("       SceneConstruction| addMarker()") }
 
     let spotsGeom = SCNSphere(radius: 100.0)

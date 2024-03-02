@@ -81,7 +81,7 @@ func makeFrameNode() -> SCNNode {
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
     frameNode <<< solarNode                                     //           "frame" << "solar"
 
-    if Debug.scene { earthNode <<< addMarker(color: #colorLiteral(red: 0.95, green: 0.85, blue: 0.55, alpha: 1), at: VectorFloat(7500.0, 0.0, 0.0)) }
+    if Debug.scene { earthNode <<< addMarkerNode(color: #colorLiteral(red: 0.95, green: 0.85, blue: 0.55, alpha: 1), at: VectorFloat(7500.0, 0.0, 0.0)) }
 
     return frameNode
 }
@@ -90,6 +90,8 @@ func makeFrameNode() -> SCNNode {
   ┆                                                               .. rotate to earth to time of day. ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
 public func rotateEarth(_ earthNode: SCNNode) {
+    if Debug.scene { print("       TimelineView (1m)| rotateEarth() -- orbitNode.childNode.count = [\(earthNode.childNodes.count)]") }
+
 #if os(iOS) || os(tvOS) || os(watchOS)  || os(visionOS)
     earthNode.eulerAngles.z = Float(zeroMeanSiderealTime(julianDate: julianDaysNow()) * deg2rad)
 #else

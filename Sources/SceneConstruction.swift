@@ -12,12 +12,12 @@ import SatelliteKit
 let Rₑ: Double = 6378.135                // equatorial radius (polar radius = 6356.752 Kms)
 
 enum Debug {
-    static let scene = true
+    static let scene = false
 }
 
 /*┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
   ┃                                                                                                  ┃
-  ┃  .. gets the rootNode (sceneNode = "scene") and attaches various other nodes:                    ┃
+  ┃  .. gets the rootNode (sceneNode = "scene") in the sceneView and attaches various other nodes:   ┃
   ┃                                                                                                  ┃
   ┃     "frame" represents the inertial frame and it is transformed to orient +Z "up".               ┃
   ┃                                                                                                  ┃
@@ -71,14 +71,20 @@ enum Debug {
   ┃                         SceneConstruction| addMarkerSpot()                                       ┃
   ┃                         SceneConstruction| makeCameraNode()                                      ┃
   ┃                                                                                                  ┃
-  ┃                     OrbitConstruction| makeOrbitNodes()                                              ┃
+  ┃                     OrbitConstruction| makeOrbitNodes()                                          ┃
   ┃         ------------------------------------------------------------                             ┃
   ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛*/
+
+// MARK: - Scene construction functions ..
 
 public func wholeScene() -> SCNScene {
     if Debug.scene { print("       SceneConstruction| wholeScene()") }
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
+  ┆ contruct an empty scene ..                                                                       ┆
+  ┆                                                                                                  ┆
+  ┆╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┆
+  ┆                                                                                                  ┆
   ┆ SCNView.scene.rootNode                                                                           ┆
   ┆     == Node("scene") ---+----                                                                    ┆
   ┆                         |                                                                        ┆
@@ -98,6 +104,12 @@ public func wholeScene() -> SCNScene {
     }
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
+  ┆ contruct the "frame" node .. this is the 'interial frame' of the universe ..                     ┆
+  ┆      rotate -90° about Y to bring +X to "front" then rotate -90° about X to bring +Z to "up"     ┆
+  ┆                                                             .. and attach it to the "scene" node ┆
+  ┆                                                                                                  ┆
+  ┆╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┆
+  ┆                                                                                                  ┆
   ┆                              +--------------------------------------------------------------+    ┆
   ┆                              |                                                              |    ┆
   ┆                              |  Node("frame") --------+                                     |    ┆

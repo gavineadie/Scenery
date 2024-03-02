@@ -20,14 +20,14 @@ public func moveOrbits(_ orbitNode: SCNNode) {
     if Debug.scene { print("       TimelineView (1s)| moveOrbits() -- orbitNode.childNode.count = [\(orbitNode.childNodes.count)]") }
 
     if elementsGroup == nil {
-        if Debug.scene { print("       TimelineView (1s)| moveOrbits() --> elementsGroup == nil") }
+        if Debug.scene { print("       TimelineView (1s)| moveOrbits() -- elementsGroup == nil") }
         elementsGroup = loadGroup("visual")
         return
     }
 
     if let elements = elementsGroup?.table[25544] {
         let satellite = Satellite(elements: elements)
-        if Debug.scene { print("       TimelineView (1s)| moveOrbits() --> sat# \(satellite.noradIdent)") }
+        if Debug.scene { print("       TimelineView (1s)| moveOrbits() -- sat# \(satellite.noradIdent)") }
         satellite.everySecond(orbitNode: orbitNode)
     }
 }
