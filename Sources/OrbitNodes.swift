@@ -13,21 +13,19 @@ public func moveOrbits(_ orbitNode: SCNNode) {
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ if orbitNode.childNodes.count = 0, we don't have elements yet .. so keep trying ..               ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
-    if orbitNode.childNodes.count == 0 {
-        makeOrbitNodes(orbitNode: orbitNode)
-    }
-    
-    if Debug.scene { print("       TimelineView (1s)| moveOrbits() -- orbitNode.childNode.count = [\(orbitNode.childNodes.count)]") }
+    if orbitNode.childNodes.count == 0 { makeOrbitNodes(orbitNode: orbitNode) }
+
+    sceneryLog.log("       TimelineView (1s)| moveOrbits() -- orbitNode.childNode.count = [\(orbitNode.childNodes.count)]")
 
     if elementsGroup == nil {
-        if Debug.scene { print("       TimelineView (1s)| moveOrbits() -- elementsGroup == nil") }
+        sceneryLog.log("       TimelineView (1s)| moveOrbits() -- elementsGroup == nil")
         elementsGroup = loadGroup("visual")
         return
     }
 
     if let elements = elementsGroup?.table[25544] {
         let satellite = Satellite(elements: elements)
-        if Debug.scene { print("       TimelineView (1s)| moveOrbits() -- sat# \(satellite.noradIdent)") }
+        sceneryLog.log("       TimelineView (1s)| moveOrbits() -- sat# \(satellite.noradIdent)")
         satellite.everySecond(orbitNode: orbitNode)
     }
 }
@@ -35,14 +33,14 @@ public func moveOrbits(_ orbitNode: SCNNode) {
 public extension Satellite {
 
     func everySecond(orbitNode: SCNNode) {
-        if Debug.scene { print("     extension Satellite| everySecond()") }
+        sceneryLog.log("     extension Satellite| everySecond()")
 
         let nowMinsAfterEpoch = (ep1950DaysNow() - self.t₀Days1950) * 1440.0
 
         if let oNode = orbitNode.childNode(withName: "O-" + noradIdent,
                                            recursively: true) {
             let oDots = oNode.childNodes
-            if Debug.scene { print("     extension Satellite| 'O-\(noradIdent)' [\(oDots.count)]") }
+            sceneryLog.log("     extension Satellite| 'O-\(noradIdent)' [\(oDots.count)]")
 
             for index in orbTickRange {
 
@@ -80,7 +78,7 @@ public extension Satellite {
         if let sNode = orbitNode.childNode(withName: "S-" + self.noradIdent,
                                            recursively: true) {
             let sDots = sNode.childNodes
-            if Debug.scene { print("     extension Satellite| 'S-\(noradIdent)' [\(sDots.count)]") }
+            sceneryLog.log("     extension Satellite| 'S-\(noradIdent)' [\(sDots.count)]")
 
             for index in surTickRange {
 
@@ -115,7 +113,7 @@ public extension Satellite {
         if let hNode = orbitNode.childNode(withName: "H-" + self.noradIdent,
                                            recursively: true) {
             let hDots = hNode.childNodes
-            if Debug.scene { print("     extension Satellite| 'H-\(noradIdent)' [\(hDots.count)]") }
+            sceneryLog.log("     extension Satellite| 'H-\(noradIdent)' [\(hDots.count)]")
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ get the sub-satellite point ..                                                                   ┆

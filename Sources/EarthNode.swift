@@ -6,7 +6,6 @@
 import SatelliteKit
 import SceneKit
 
-
 /*┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
   ┃ Dimensions (Kms):                                                                                ┃
   ┃             Earth Radius:   6,378                                                                ┃
@@ -37,7 +36,7 @@ import SceneKit
   ┆										   +-------------------------------------------+             ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
 func makeEarthNode() -> SCNNode {
-    if Debug.scene { print("       SceneConstruction| makeEarth()") }
+    sceneryLog.log("       SceneConstruction| makeEarth()")
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ "globe" .. spherical Earth, texture mapped -- add it to "earth" ..                               ┆
@@ -94,7 +93,7 @@ func makeEarthNode() -> SCNNode {
   │ contruct the "globe" node ..                                                                     │
   └──────────────────────────────────────────────────────────────────────────────────────────────────┘*/
 func makeGlobe() -> SCNNode {
-    if Debug.scene { print("       SceneConstruction| makeGlobe()") }
+    sceneryLog.log("       SceneConstruction| makeGlobe()")
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ Earth's surface -- a globe of a tad less than Rₑ                                                 ┆

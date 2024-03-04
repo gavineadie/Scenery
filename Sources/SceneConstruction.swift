@@ -3,11 +3,12 @@
   ║ Created by Gavin Eadie on Mar12/17   Copyright © 2017-24 Ramsay Consulting. All rights reserved. ║
   ╚══════════════════════════════════════════════════════════════════════════════════════════════════╝*/
 
-// swiftlint:disable identifier_name
-
 import MetalKit
 import SceneKit
 import SatelliteKit
+
+import OSLog
+let sceneryLog = Logger(subsystem: "com.ramsaycons.Scenery", category: "tests")
 
 let Rₑ: Double = 6378.135                // equatorial radius (polar radius = 6356.752 Kms)
 
@@ -78,7 +79,14 @@ enum Debug {
 // MARK: - Scene construction functions ..
 
 public func wholeScene() -> SCNScene {
-    if Debug.scene { print("       SceneConstruction| wholeScene()") }
+
+#if os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
+    sceneryLog.log("       SceneConstruction| iOS, etc")
+#else
+    sceneryLog.log("       SceneConstruction| macOS")
+#endif
+
+    sceneryLog.log("       SceneConstruction| wholeScene()")
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ contruct an empty scene ..                                                                       ┆

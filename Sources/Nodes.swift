@@ -6,7 +6,6 @@
 import SatelliteKit
 import SceneKit
 
-
 public let  annArborLatitude = +42.2755                     // degrees
 public let annArborLongitude = -83.7521                     // degrees
 public let  annArborAltitude =   0.1                        // Kilometers
@@ -17,7 +16,7 @@ public let  annArborAltitude =   0.1                        // Kilometers
   ┆                                       +-- Node("obsvr")               ┆                          ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
 func makeObserver() -> SCNNode {
-    if Debug.scene { print("       SceneConstruction| makeObserver()") }
+    sceneryLog.log("       SceneConstruction| makeObserver()")
 
     let obsvrGeom = SCNSphere(radius: 50.0)
     obsvrGeom.isGeodesic = true
@@ -40,7 +39,7 @@ func makeObserver() -> SCNNode {
 let cameraDistance = 50_000.0
 
 func makeViewrNode() -> SCNNode {
-    if Debug.scene { print("       SceneConstruction| makeViewrNode()") }
+    sceneryLog.log("       SceneConstruction| makeViewrNode()")
 
     let viewrNode = SCNNode(name: "viewr")                  // non-rendering node, holds the camera
 
@@ -56,7 +55,7 @@ func makeViewrNode() -> SCNNode {
 }
 
 func makeCameraNode() -> SCNNode {
-    if Debug.scene { print("       SceneConstruction| makeCameraNode()") }
+    sceneryLog.log("       SceneConstruction| makeCameraNode()")
 
     let camera = SCNCamera()                                // create a camera
     camera.zFar  = cameraDistance + 100_000.0
@@ -73,7 +72,7 @@ func makeCameraNode() -> SCNNode {
 /*┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
   └──────────────────────────────────────────────────────────────────────────────────────────────────┘*/
 func makeSolarLight() -> SCNNode {
-    if Debug.scene { print("       SceneConstruction| makeSolarLight()") }
+    sceneryLog.log("       SceneConstruction| makeSolarLight()")
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ put a node in the direction of the sun ..                                                        ┆
@@ -93,7 +92,7 @@ func makeSolarLight() -> SCNNode {
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆                                                                             "light"              ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
-   let lightNode = SCNNode(name: "light")
+    let lightNode = SCNNode(name: "light")
     lightNode.light = sunLight
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
@@ -108,7 +107,7 @@ func makeSolarLight() -> SCNNode {
   └──────────────────────────────────────────────────────────────────────────────────────────────────┘*/
 #if os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
 func addMarkerNode(color: UIColor, at: VectorFloat) -> SCNNode {
-    if Debug.scene { print("       SceneConstruction| addMarker()") }
+    sceneryLog.log("       SceneConstruction| addMarker()")
 
     let spotsGeom = SCNSphere(radius: 100.0)
     spotsGeom.isGeodesic = true
@@ -122,7 +121,7 @@ func addMarkerNode(color: UIColor, at: VectorFloat) -> SCNNode {
 }
 #else
 func addMarkerNode(color: NSColor, at: VectorFloat) -> SCNNode {
-    if Debug.scene { print("       SceneConstruction| addMarker()") }
+    sceneryLog.log("       SceneConstruction| addMarker()")
 
     let spotsGeom = SCNSphere(radius: 100.0)
     spotsGeom.isGeodesic = true

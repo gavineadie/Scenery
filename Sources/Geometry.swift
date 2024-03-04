@@ -9,7 +9,7 @@ import SceneKit
   ┃ reads a binary file (x,y,z),(x,y,z), (x,y,z),(x,y,z), .. and makes a SceneKit Geometry ..        ┃
   ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛*/
 func geometry(from vertexAssetName: String) -> SCNGeometry? {
-    if Debug.scene { print("       SceneConstruction| geometry(from: \(vertexAssetName))") }
+    sceneryLog.log("       SceneConstruction| geometry(from: \(vertexAssetName))")
 
     let vertexAsset = NSDataAsset(name: vertexAssetName)
 

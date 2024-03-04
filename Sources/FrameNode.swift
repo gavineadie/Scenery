@@ -14,7 +14,7 @@ let USE_SCENE_FILE = false
   │                                                             .. and attach it to the "scene" node │
   └──────────────────────────────────────────────────────────────────────────────────────────────────┘*/
 func makeFrameNode() -> SCNNode {
-    if Debug.scene { print("       SceneConstruction| makeFrame()") }
+    sceneryLog.log("       SceneConstruction| makeFrame()")
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆                                 Node("frame") --------+                                          ┆
@@ -90,7 +90,7 @@ func makeFrameNode() -> SCNNode {
   ┆                                                               .. rotate to earth to time of day. ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
 public func rotateEarth(_ earthNode: SCNNode) {
-    if Debug.scene { print("       TimelineView (1m)| rotateEarth() -- orbitNode.childNode.count = [\(earthNode.childNodes.count)]") }
+    sceneryLog.log("       TimelineView (1m)| rotateEarth() -- orbitNode.childNode.count = [\(earthNode.childNodes.count)]")
 
 #if os(iOS) || os(tvOS) || os(watchOS)  || os(visionOS)
     earthNode.eulerAngles.z = Float(zeroMeanSiderealTime(julianDate: julianDaysNow()) * deg2rad)
