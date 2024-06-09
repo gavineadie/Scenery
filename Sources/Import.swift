@@ -101,3 +101,13 @@ func fetchFrom(url: URL) async -> String {
         fatalError("fetchFrom \(error.localizedDescription) ..")
     }
 }
+
+func loadGroupA(_ groupKey: String) -> ElementsGroup? {
+
+    ElementsGroup("""
+            ACS3
+            1 59588U 24077B   24160.90748881  .00000096  00000+0  14659-3 0  9995
+            2 59588  97.4065 231.0109 0021555 116.0474 244.2899 13.67683947  6272
+            """)
+
+}
