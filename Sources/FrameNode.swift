@@ -90,7 +90,7 @@ func makeFrameNode() -> SCNNode {
   ┆                                                               .. rotate to earth to time of day. ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
 public func rotateEarth(_ earthNode: SCNNode) {
-    sceneryLog.log("       TimelineView (1m)| rotateEarth() -- orbitNode.childNode.count = [\(earthNode.childNodes.count)]")
+    sceneryLog.log("       TimelineView (1m)| rotateEarth()")
 
 #if os(iOS) || os(tvOS) || os(watchOS)  || os(visionOS)
     earthNode.eulerAngles.z = Float(zeroMeanSiderealTime(julianDate: julianDaysNow()) * deg2rad)

@@ -60,9 +60,9 @@ let dotMinRadius = 15.0
   ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛*/
 
 public func makeOrbitNodes(orbitNode: SCNNode) {
-//    sceneryLog.log("       OrbitConstruction| makeOrbitNodes()")
+    sceneryLog.log("       OrbitConstruction| makeOrbitNodes()")
 
-    if let elements = elementsGroup?.table[59588] {  // 42684 -- 25544
+    if let elements = elementsGroup?.table[25544] {  // 42684 -- 25544 -- 59588
         let satellite = Satellite(elements: elements)
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
