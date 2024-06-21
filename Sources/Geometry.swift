@@ -14,7 +14,7 @@ func geometry(from vertexAssetName: String) -> SCNGeometry? {
     let vertexAsset = NSDataAsset(name: vertexAssetName)
 
     guard let vertexData = vertexAsset?.data else {
-        print("vertex file '\(vertexAssetName)' missing")
+        sceneryLog.error("vertex file '\(vertexAssetName)' missing")
         return nil
     }
 

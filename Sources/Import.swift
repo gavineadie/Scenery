@@ -75,7 +75,10 @@ func loadGroup(_ groupKey: String) -> ElementsGroup? {
   ┃                                                          any other Badness™                      ┃
   ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛*/
 func fetchFrom(url: URL) async -> String {
-    if url.isFileURL { fatalError("fetchFrom: doesn't do files ..") }
+    if url.isFileURL {
+        sceneryLog.error("fetchFrom: doesn't do files ..")
+        fatalError("fetchFrom: doesn't do files ..")
+    }
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ request data from the server's URL, and get data and response ..                                 ┆
@@ -87,7 +90,7 @@ func fetchFrom(url: URL) async -> String {
   ┆ if the server response is not "200" -- fail ..                                                   ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
         guard (response as? HTTPURLResponse)?.statusCode == 200 else {
-            print(String(decoding: data, as: UTF8.self))
+            sceneryLog.error("\(String(decoding: data, as: UTF8.self))")
             fatalError("fetchFrom :non-200 net response ..")
         }
 
@@ -98,6 +101,7 @@ func fetchFrom(url: URL) async -> String {
                                   encoding: .utf8) else { fatalError("fetchFrom: data error ..") }
         return string
     } catch {
+        sceneryLog.error("fetchFrom \(error.localizedDescription) ..")
         fatalError("fetchFrom \(error.localizedDescription) ..")
     }
 }

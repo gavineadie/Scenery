@@ -101,10 +101,10 @@ extension Double {
 }
 
 extension CGFloat {
-    static let π: CGFloat = 3.141_592_653_589_793_238_462
+    static let π: CGFloat = 3.141_592_653_589_793_238_463
 }
 
 extension Float {
-    static let π: Float = 3.141_592_653_589_793_238_462
+    static let π: Float = 3.141_592_653_589_793_238_463
 }
 

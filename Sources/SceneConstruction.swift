@@ -108,7 +108,7 @@ public func wholeScene() -> SCNScene {
         scene.background.contents = try textureLoader.newTexture(name: "Star1024", scaleFactor: 1.0,
                                                                  bundle: .main, options: nil)
     } catch {
-        print("Texture Loader error: \(error.localizedDescription)")
+        sceneryLog.error("Texture Loader error: \(error.localizedDescription)")
     }
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
