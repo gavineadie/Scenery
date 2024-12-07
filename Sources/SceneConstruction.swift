@@ -5,7 +5,6 @@
 
 import MetalKit
 import SceneKit
-import SatelliteKit
 
 import OSLog
 let sceneryLog = Logger(subsystem: "com.ramsaycons.Scenery", category: "tests")

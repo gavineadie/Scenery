@@ -4,7 +4,6 @@
   ╚══════════════════════════════════════════════════════════════════════════════════════════════════╝*/
 
 import SceneKit
-import DemosKit
 import SatelliteKit
 
 let orbTickDelta = 30                                           // seconds between marks on orbit

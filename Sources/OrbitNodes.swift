@@ -39,7 +39,7 @@ public extension Satellite {
             for index in orbTickRange {
 
                 let tickMinutes = nowMinsAfterEpoch + Double(orbTickDelta*index) / 60.0
-                let oSatCel = self.position(minsAfterEpoch: tickMinutes)
+                let oSatCel = try! self.position_throwz(minsAfterEpoch: tickMinutes)
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ for 'orbital' track, is satellite in sunlight ?                                                  ┆
@@ -76,7 +76,7 @@ public extension Satellite {
             for index in surTickRange {
 
                 let tickMinutes = nowMinsAfterEpoch + Double(orbTickDelta*index) / 60.0
-                let oSatCel = self.position(minsAfterEpoch: tickMinutes)
+                let oSatCel = try! self.position_throwz(minsAfterEpoch: tickMinutes)
 
                 let jDate = self.t₀Days1950 + JD.epoch1950 + tickMinutes / 1440.0
                 var lla = eci2geo(julianDays: jDate, celestial: oSatCel)
