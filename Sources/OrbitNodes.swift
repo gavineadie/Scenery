@@ -1,6 +1,6 @@
 /*╔══════════════════════════════════════════════════════════════════════════════════════════════════╗
   ║ OrbitNodes.swift                                                                         Scenery ║
-  ║ Created by Gavin Eadie on Jan01/17.. Copyright © 2017-24 Ramsay Consulting. All rights reserved. ║
+  ║ Created by Gavin Eadie on Jan01/17.. Copyright © 2017-25 Ramsay Consulting. All rights reserved. ║
   ╚══════════════════════════════════════════════════════════════════════════════════════════════════╝*/
 
 import SceneKit
@@ -39,7 +39,7 @@ public extension Satellite {
             for index in orbTickRange {
 
                 let tickMinutes = nowMinsAfterEpoch + Double(orbTickDelta*index) / 60.0
-                let oSatCel = try! self.position_throwz(minsAfterEpoch: tickMinutes)
+                let oSatCel = try! self.position(minsAfterEpoch: tickMinutes)
 
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ for 'orbital' track, is satellite in sunlight ?                                                  ┆
@@ -76,7 +76,7 @@ public extension Satellite {
             for index in surTickRange {
 
                 let tickMinutes = nowMinsAfterEpoch + Double(orbTickDelta*index) / 60.0
-                let oSatCel = try! self.position_throwz(minsAfterEpoch: tickMinutes)
+                let oSatCel = try! self.position(minsAfterEpoch: tickMinutes)
 
                 let jDate = self.t₀Days1950 + JD.epoch1950 + tickMinutes / 1440.0
                 var lla = eci2geo(julianDays: jDate, celestial: oSatCel)
@@ -110,7 +110,7 @@ public extension Satellite {
 /*╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
   ┆ get the sub-satellite point ..                                                                   ┆
   ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯*/
-            let satNowLatLonAlt = self.geoPosition(minsAfterEpoch:
+            let satNowLatLonAlt = try! self.geoPosition(minsAfterEpoch:
                                                     (ep1950DaysNow() - self.t₀Days1950) * 1440.0)
 
             let satLatitudeRads = satNowLatLonAlt.lat * deg2rad
